@@ -6,7 +6,7 @@
  *    |  COPYRIGHT : (c) 2024 per Linuxperoxo.     |
  *    |  AUTHOR    : Linuxperoxo                   |
  *    |  FILE      : cpu.cpp                       |
- *    |  SRC MOD   : 25/10/2024                    |
+ *    |  SRC MOD   : 26/10/2024                    |
  *    |                                            |
  *    O--------------------------------------------/
  *
@@ -159,22 +159,31 @@ void CPU::cycle() noexcept
      * Um pequeno LOG so para ajudar no desenvolvimento
      *
      */
+     
+    /*
+     *
+     * Simples contador de runtime só para ter uma noção 
+     *
+     */
 
     /*
      *
-     * (1.0 / 1790000.0) Calculamos o tempo que leva para um ciclo do processador e (558.0 / 1e9) 
-     * calculamos o tempo de sono, 1e9 é notação para 1.10^9 = 1 000 000 000
+     * Aqui faço incrimento 558 nanosegundos ao _runtime, 558 pois é o tempo de cada ciclo
+     *
+     * Como estamos trabalhando com segundos dividimos 558.0 por 1.10^9 já que 1 nanosegundo é
+     * 0.000000001 segundos
      *
      */
     
-    _runtime_sec += (1.0 / 1790000.0) + (558.0 / 1e9);
-    
+    _runtime_sec += (static_cast<double>(CPU_FREQUENCY) / 1e9);
+
     _cpu_log << "INSTRUCTION   : \"" << _instruction->_name << "\" \n";
     _cpu_log << "PC ADDRS      : \"0x" << std::hex << _PC << "\" \n";
     _cpu_log << "STACK ADDRS   : \"0x" << std::hex << static_cast<int>(_STKPTR) << "\" \n";
     _cpu_log << "CYCLE COUNTER : \"" << std::dec << ++_cycle_counter << "\" \n";
-    _cpu_log << "CPU CLOCK     : \"" << std::dec << std::setprecision(3) << HMZ_FREQUENCY << "MHz\" \n";
-    _cpu_log << "CPU RUNTIME   : \"" << std::dec << std::setprecision(3) << _runtime_sec << "sec\"\n";
+    _cpu_log << "CPU CLOCK     : \"" << std::fixed << std::setprecision(3) << HMZ_FREQUENCY << "MHz\" \n";
+    _cpu_log << "CPU RUNTIME   : \"" << std::fixed << std::setprecision(6) << _runtime_sec << "sec\"\n";
+    _cpu_log << "REAL RUNTIME  : \"" << std::fixed << std::setprecision(6) << _runtime_sec * 115 << "sec\"\n";
 
     std::cout << "\n+--------CPU-INSTRUCTION-LOG--------+\n";
     std::cout << _cpu_log.str();

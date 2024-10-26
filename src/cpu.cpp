@@ -41,6 +41,11 @@
 #define DISPLAY_FRAMEBUFFER_SIZE 0x12C
 #endif
 
+#define NANO_PER_SEC 1e9
+
+#define MILLISECONDS_HOUSE 3
+#define NANOSECONDS_HOUSE 6
+
 CPU::CPU(BUS* _bus_to_link) noexcept
 {
   _BUS    = _bus_to_link;
@@ -175,15 +180,15 @@ void CPU::cycle() noexcept
      *
      */
     
-    _runtime_sec += (static_cast<double>(CPU_FREQUENCY) / 1e9);
+    _runtime_sec += (static_cast<double>(CPU_FREQUENCY) / NANO_PER_SEC);
 
     _cpu_log << "INSTRUCTION   : \"" << _instruction->_name << "\" \n";
     _cpu_log << "PC ADDRS      : \"0x" << std::hex << _PC << "\" \n";
     _cpu_log << "STACK ADDRS   : \"0x" << std::hex << static_cast<int>(_STKPTR) << "\" \n";
     _cpu_log << "CYCLE COUNTER : \"" << std::dec << ++_cycle_counter << "\" \n";
-    _cpu_log << "CPU CLOCK     : \"" << std::fixed << std::setprecision(3) << HMZ_FREQUENCY << "MHz\" \n";
-    _cpu_log << "CPU RUNTIME   : \"" << std::fixed << std::setprecision(6) << _runtime_sec << "sec\"\n";
-    _cpu_log << "REAL RUNTIME  : \"" << std::fixed << std::setprecision(6) << _runtime_sec * 115 << "sec\"\n";
+    _cpu_log << "CPU CLOCK     : \"" << std::fixed << std::setprecision(2) << HMZ_FREQUENCY << "MHz\" \n";
+    _cpu_log << "CPU RUNTIME   : \"" << std::fixed << std::setprecision(NANOSECONDS_HOUSE) << _runtime_sec << "sec\"\n";
+    _cpu_log << "REAL RUNTIME  : \"" << std::fixed << std::setprecision(NANOSECONDS_HOUSE) << _runtime_sec * 115 << "sec\"\n";
 
     std::cout << "\n+--------CPU-INSTRUCTION-LOG--------+\n";
     std::cout << _cpu_log.str();
